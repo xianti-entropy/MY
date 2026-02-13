@@ -1,0 +1,156 @@
+{
+  "users": [
+    {
+      "id": "1770268985951",
+      "username": "lxj",
+      "password": "8daad108aa010294772650b6ac84d8393ba47d3b630dabe864cc138a964c7b7d",
+      "token": "b90f4afb274fdcba01e34f24f8270f675d669d22853c74014481b4fe2822c2cf",
+      "createdAt": 1770268985953
+    },
+    {
+      "id": "1770977207661",
+      "username": "114",
+      "password": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+      "tokens": [
+        "b247606d424260fa9ae0a6dea9a3c36bf79f91610ce7154126f72551b4f5b239"
+      ],
+      "token": "b247606d424260fa9ae0a6dea9a3c36bf79f91610ce7154126f72551b4f5b239",
+      "createdAt": 1770977207663
+    }
+  ],
+  "invoices": [
+    {
+      "id": "1770266250572",
+      "no": "NO-20260205-486",
+      "title": "送货单",
+      "receiver": "u机构库结果",
+      "date": "2026-02-05",
+      "items": [
+        {
+          "id": "1770266270430",
+          "name": "从v计划",
+          "spec": "",
+          "unit": "",
+          "price": 890,
+          "quantity": 41,
+          "total": 36490
+        }
+      ],
+      "totalAmount": 36490,
+      "note": "",
+      "createdAt": 1770266250572
+    },
+    {
+      "id": "1770215809493",
+      "no": "NO-20260204-160",
+      "title": "送货单",
+      "receiver": "孙笑川",
+      "date": "2026-02-04",
+      "items": [
+        {
+          "id": "1770215816909",
+          "name": "小米粥",
+          "spec": "烫",
+          "unit": "桶",
+          "price": 30,
+          "quantity": 114514,
+          "total": 3435420
+        }
+      ],
+      "totalAmount": 3435420,
+      "note": "阿弥诺斯说的道理\n",
+      "createdAt": 1770215809493
+    },
+    {
+      "id": "1770269022298",
+      "no": "NO-20260205-817",
+      "title": "送货单",
+      "receiver": "jfweiln",
+      "date": "2026-02-05",
+      "items": [
+        {
+          "id": "1770269037929",
+          "name": "nfkjwen",
+          "spec": "",
+          "unit": "",
+          "price": 3,
+          "quantity": 41,
+          "total": 123
+        }
+      ],
+      "totalAmount": 123,
+      "note": "",
+      "createdAt": 1770269022298,
+      "userId": "1770268985951"
+    },
+    {
+      "id": "1770977209909",
+      "no": "NO-20260213-342",
+      "title": "销售单",
+      "receiver": "1",
+      "handler": "1",
+      "warehouse": "主仓库",
+      "summary": "1",
+      "date": "2026-02-13",
+      "items": [
+        {
+          "id": "1770977217023",
+          "name": "2",
+          "spec": "",
+          "unit": "个",
+          "price": 0,
+          "quantity": 1,
+          "total": 0,
+          "lineSummary": ""
+        },
+        {
+          "id": "1770977253249",
+          "name": "2",
+          "spec": "",
+          "unit": "个",
+          "price": 0,
+          "quantity": 1,
+          "total": 0,
+          "lineSummary": ""
+        }
+      ],
+      "totalAmount": 0,
+      "note": "1",
+      "createdAt": 1770977209909,
+      "lastModified": 1770977276251,
+      "userId": "1770977207661"
+    }
+  ],
+  "products": [
+    {
+      "id": "1770977316921",
+      "name": "2",
+      "spec": "",
+      "unit": "件",
+      "price": 0,
+      "lastModified": 1770977316943,
+      "userId": "1770977207661"
+    },
+    {
+      "id": "1770977313386",
+      "name": "1",
+      "spec": "",
+      "unit": "件",
+      "price": 0,
+      "lastModified": 1770977907801,
+      "userId": "1770977207661"
+    }
+  ],
+  "customers": [
+    {
+      "id": "1770977915796",
+      "name": "1",
+      "phone": "",
+      "email": "",
+      "address": "",
+      "createdAt": 1770977915796,
+      "lastModified": 1770977915823,
+      "userId": "1770977207661"
+    }
+  ]
+}

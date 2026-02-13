@@ -1,0 +1,289 @@
+const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+const DB_FILE = path.join(__dirname, 'db.json');
+
+// --- 初始化数据结�?---
+const loadData = () => {
+    if (!fs.existsSync(DB_FILE)) {
+        return { users: [], invoices: [], products: [], customers: [] };
+    }
+    const data = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+    // 确保所有必要的数组都存�?
+    return {
+        users: data.users || [],
+        invoices: data.invoices || [],
+        products: data.products || [],
+        customers: data.customers || []
+    };
+};
+
+const saveData = (data) => {
+    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+};
+
+const getUserTokens = (user) => {
+    if (Array.isArray(user.tokens)) return user.tokens;
+    if (user.token) return [user.token];
+    return [];
+};
+
+const setUserTokens = (user, tokens) => {
+    user.tokens = tokens;
+    if (tokens.length > 0) {
+        user.token = tokens[tokens.length - 1];
+    } else {
+        delete user.token;
+    }
+};
+
+// --- 工具函数：简单哈希（生产环境应使�?bcrypt�?---
+const hashPassword = (password) => {
+    return crypto.createHash('sha256').update(password).digest('hex');
+};
+
+// --- 中间件：验证 token ---
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // 格式: Bearer TOKEN
+    
+    if (!token) {
+        return res.status(401).json({ error: '未提�?token' });
+    }
+    
+    // 简单验证（生产环境应使�?JWT�?
+    const db = loadData();
+    const user = db.users.find(u => getUserTokens(u).includes(token));
+    
+    if (!user) {
+        return res.status(403).json({ error: 'token 无效' });
+    }
+    
+    req.userId = user.id;
+    next();
+};
+
+// ========== 用户认证接口 ==========
+
+// 注册
+app.post('/api/auth/register', (req, res) => {
+    const { username, password } = req.body;
+    
+    if (!username || !password) {
+        return res.status(400).json({ error: '用户名和密码不能为空' });
+    }
+    
+    const db = loadData();
+    
+    // 检查用户是否已存在
+    if (db.users.find(u => u.username === username)) {
+        return res.status(409).json({ error: '用户已存在' });
+    }
+    
+    // 创建新用户
+    const userId = Date.now().toString();
+    const token = crypto.randomBytes(32).toString('hex');
+    
+    db.users.push({
+        id: userId,
+        username: username,
+        password: hashPassword(password),
+        tokens: [token],
+        token: token,
+        createdAt: Date.now()
+    });
+    
+    saveData(db);
+    
+    res.json({ 
+        success: true, 
+        token: token,
+        user: { id: userId, username: username }
+    });
+});
+
+// 登录
+app.post('/api/auth/login', (req, res) => {
+    const { username, password } = req.body;
+    
+    if (!username || !password) {
+        return res.status(400).json({ error: '用户名和密码不能为空' });
+    }
+    
+    const db = loadData();
+    const user = db.users.find(u => u.username === username);
+    
+    if (!user || user.password !== hashPassword(password)) {
+        return res.status(401).json({ error: '用户名或密码错误' });
+    }
+    
+    // 生成�?token
+    const token = crypto.randomBytes(32).toString('hex');
+    const tokens = getUserTokens(user);
+    if (!tokens.includes(token)) tokens.push(token);
+    setUserTokens(user, tokens);
+    saveData(db);
+    
+    res.json({ 
+        success: true, 
+        token: token,
+        user: { id: user.id, username: user.username }
+    });
+});
+
+// 验证 token
+app.post('/api/auth/verify', (req, res) => {
+    const token = req.body.token;
+    
+    if (!token) {
+        return res.status(400).json({ error: 'token 不能为空' });
+    }
+    
+    const db = loadData();
+    const user = db.users.find(u => getUserTokens(u).includes(token));
+    
+    if (!user) {
+        return res.status(401).json({ error: 'token 无效' });
+    }
+    
+    res.json({ 
+        valid: true,
+        user: { id: user.id, username: user.username }
+    });
+});
+
+// ========== 单据接口（需要认证）==========
+
+// 获取单据（仅获取当前用户的）
+app.get('/api/invoices', authenticateToken, (req, res) => {
+    const db = loadData();
+    const userInvoices = db.invoices.filter(inv => inv.userId === req.userId);
+    res.json(userInvoices);
+});
+
+// 保存单据
+app.post('/api/invoices', authenticateToken, (req, res) => {
+    const db = loadData();
+    const invoices = Array.isArray(req.body) ? req.body : [req.body];
+    
+    // 给每个单据关联用�?ID
+    invoices.forEach(inv => inv.userId = req.userId);
+    
+    // 替换当前用户的所有单�?
+    db.invoices = db.invoices.filter(inv => inv.userId !== req.userId).concat(invoices);
+    saveData(db);
+    
+    res.json({ success: true });
+});
+
+// ========== 商品接口（需要认证）==========
+
+// 获取商品（仅获取当前用户的）
+app.get('/api/products', authenticateToken, (req, res) => {
+    const db = loadData();
+    const userProducts = db.products.filter(prod => prod.userId === req.userId);
+    res.json(userProducts);
+});
+
+// 保存商品
+app.post('/api/products', authenticateToken, (req, res) => {
+    const db = loadData();
+    const products = Array.isArray(req.body) ? req.body : [req.body];
+    
+    // 给每个商品关联用�?ID
+    products.forEach(prod => prod.userId = req.userId);
+    
+    // 替换当前用户的所有商�?
+    db.products = db.products.filter(prod => prod.userId !== req.userId).concat(products);
+    saveData(db);
+    
+    res.json({ success: true });
+});
+
+// ========== Products API ==========
+
+// Get products for current user - supports incremental sync
+app.get('/api/products', authenticateToken, (req, res) => {
+    const db = loadData();
+    const since = req.query.since ? parseInt(req.query.since) : 0;
+    const userProducts = db.products.filter(prod => prod.userId === req.userId);
+    
+    // If since parameter specified, only return data modified after that time
+    const filteredProducts = since > 0 
+        ? userProducts.filter(prod => (prod.lastModified || prod.updatedAt || 0) >= since)
+        : userProducts;
+    
+    res.json(filteredProducts);
+});
+
+// Save products
+app.post('/api/products', authenticateToken, (req, res) => {
+    const db = loadData();
+    const products = Array.isArray(req.body) ? req.body : [req.body];
+    
+    const now = Date.now();
+    
+    // Add userId and timestamp to each product
+    products.forEach(prod => {
+        prod.userId = req.userId;
+        prod.lastModified = now;
+    });
+    
+    // Merge instead of replace: update existing, add new
+    const userProductIds = new Set(products.map(p => p.id));
+    db.products = db.products.filter(prod => prod.userId !== req.userId || !userProductIds.has(prod.id));
+    db.products = db.products.concat(products);
+    
+    saveData(db);
+    res.json({ success: true });
+});
+
+// Get customers for current user
+app.get('/api/customers', authenticateToken, (req, res) => {
+    const db = loadData();
+    const since = req.query.since ? parseInt(req.query.since) : 0;
+    let userCustomers = db.customers.filter(cust => cust.userId === req.userId);
+    
+    if (since > 0) {
+        userCustomers = userCustomers.filter(cust => (cust.lastModified || cust.updatedAt || 0) >= since);
+    }
+    
+    res.json(userCustomers);
+});
+
+// Save customers
+app.post('/api/customers', authenticateToken, (req, res) => {
+    const db = loadData();
+    const customers = Array.isArray(req.body) ? req.body : [req.body];
+    
+    const now = Date.now();
+    
+    // Add userId and timestamp to each customer
+    customers.forEach(cust => {
+        cust.userId = req.userId;
+        cust.lastModified = now;
+    });
+    
+    // Merge instead of replace: update existing, add new
+    const userCustomerIds = new Set(customers.map(c => c.id));
+    db.customers = db.customers.filter(cust => cust.userId !== req.userId || !userCustomerIds.has(cust.id));
+    db.customers = db.customers.concat(customers);
+    
+    saveData(db);
+    res.json({ success: true });
+});
+
+app.listen(3000, '0.0.0.0', () => {
+    console.log('🚀 永不丢失版后端已启动！支持用户认证，数据存放�?db.json');
+});
+
+
+
+
