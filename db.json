@@ -16,6 +16,28 @@
       ],
       "token": "b247606d424260fa9ae0a6dea9a3c36bf79f91610ce7154126f72551b4f5b239",
       "createdAt": 1770977207663
+    },
+    {
+      "id": "1770993697662",
+      "username": "1",
+      "password": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "tokens": [
+        "6ce16e8cd4fe0703d492c128c72def25dc049b644acfcfdbfa6959ee6c7a75c2",
+        "b41473aabb01a4b9f72d4adb7a3062b857f8b66d547aa73a31e2bb6c0679468b"
+      ],
+      "token": "b41473aabb01a4b9f72d4adb7a3062b857f8b66d547aa73a31e2bb6c0679468b",
+      "createdAt": 1770993697667
+    },
+    {
+      "id": "1771850710397",
+      "username": "0",
+      "password": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "tokens": [
+        "668b11f010b036ef88b294dceddd59cc155e105b994de19be351e4ff15fc711d",
+        "d0dee17de9e64cb16e2d76f5ef8b2791dd229fe679aefe117eaf8baf62743ed6"
+      ],
+      "token": "d0dee17de9e64cb16e2d76f5ef8b2791dd229fe679aefe117eaf8baf62743ed6",
+      "createdAt": 1771850710397
     }
   ],
   "invoices": [
@@ -119,6 +141,113 @@
       "createdAt": 1770977209909,
       "lastModified": 1770977276251,
       "userId": "1770977207661"
+    },
+    {
+      "id": "1771850755373",
+      "no": "NO-20260223-308",
+      "title": "销售单",
+      "status": "draft",
+      "receiver": "",
+      "handler": "",
+      "warehouse": "主仓库",
+      "summary": "",
+      "date": "2026-02-23",
+      "items": [
+        {
+          "id": "1771850762669",
+          "name": "pvc直接",
+          "spec": "",
+          "unit": "件",
+          "price": 0,
+          "quantity": 1,
+          "total": 0,
+          "lineSummary": "pvc直接",
+          "productId": "1771850742502"
+        },
+        {
+          "id": "1771850779537",
+          "name": "",
+          "spec": "",
+          "unit": "个",
+          "price": 0,
+          "quantity": 1,
+          "total": 0,
+          "lineSummary": ""
+        }
+      ],
+      "totalAmount": 0,
+      "note": "",
+      "createdAt": 1771850755373,
+      "lastModified": 1771850781957,
+      "userId": "1771850710397"
+    },
+    {
+      "id": "1771850785681",
+      "no": "NO-20260223-585",
+      "title": "销售单",
+      "status": "saved",
+      "receiver": "1",
+      "handler": "1",
+      "warehouse": "主仓库",
+      "summary": "",
+      "date": "2026-02-23",
+      "items": [
+        {
+          "id": "1771850787598",
+          "name": "1111",
+          "spec": "",
+          "unit": "个",
+          "price": 0,
+          "quantity": 1,
+          "total": 0,
+          "lineSummary": ""
+        }
+      ],
+      "totalAmount": 0,
+      "note": "",
+      "createdAt": 1771850785681,
+      "lastModified": 1771850795817,
+      "userId": "1771850710397"
+    },
+    {
+      "id": "1771850801559",
+      "no": "NO-20260223-687",
+      "title": "销售单",
+      "status": "draft",
+      "receiver": "",
+      "handler": "",
+      "warehouse": "主仓库",
+      "summary": "",
+      "date": "2026-02-23",
+      "items": [
+        {
+          "id": "1771850803754",
+          "name": "pvc直接",
+          "spec": "",
+          "unit": "件",
+          "price": 0,
+          "quantity": 1,
+          "total": 0,
+          "lineSummary": "pvc直接",
+          "productId": "1771850742502"
+        },
+        {
+          "id": "1771850821950",
+          "name": "ppr直接",
+          "spec": "",
+          "unit": "件",
+          "price": 0,
+          "quantity": 1,
+          "total": 0,
+          "lineSummary": "ppr直接",
+          "productId": "1771850753902"
+        }
+      ],
+      "totalAmount": 0,
+      "note": "",
+      "createdAt": 1771850801559,
+      "lastModified": 1771850827901,
+      "userId": "1771850710397"
     }
   ],
   "products": [
@@ -139,6 +268,87 @@
       "price": 0,
       "lastModified": 1770977907801,
       "userId": "1770977207661"
+    },
+    {
+      "id": "1771850742502",
+      "name": "pvc直接",
+      "spec": "",
+      "unit": "件",
+      "price": 0,
+      "lastModified": 1771850742516,
+      "userId": "1771850710397"
+    },
+    {
+      "id": "1771850753902",
+      "name": "ppr直接",
+      "spec": "",
+      "unit": "件",
+      "price": 0,
+      "lastModified": 1771850753914,
+      "userId": "1771850710397"
+    },
+    {
+      "id": "1771850940358",
+      "name": "弯头1",
+      "spec": "",
+      "unit": "件",
+      "price": 0,
+      "lastModified": 1771850940361,
+      "userId": "1771850710397"
+    },
+    {
+      "id": "1771850946360",
+      "name": "弯头2",
+      "spec": "",
+      "unit": "件",
+      "price": 0,
+      "lastModified": 1771850946373,
+      "userId": "1771850710397"
+    },
+    {
+      "id": "1771852571492",
+      "name": "pvc穿线管",
+      "spec": "",
+      "unit": "件",
+      "price": 0,
+      "lastModified": 1771852571508,
+      "userId": "1770993697662"
+    },
+    {
+      "id": "cat-1771853413154-secj",
+      "name": "pvc直接",
+      "createdAt": 1771853413154,
+      "entityType": "__mybill_category__",
+      "lastModified": 1771853413171,
+      "userId": "1771850710397"
+    },
+    {
+      "id": "cat-1771853422851-ko8d",
+      "name": "弯头",
+      "createdAt": 1771853422851,
+      "entityType": "__mybill_category__",
+      "lastModified": 1771853422868,
+      "userId": "1771850710397"
+    },
+    {
+      "id": "1771853453962",
+      "name": "直接",
+      "spec": "111",
+      "unit": "件",
+      "price": 0,
+      "categoryId": "cat-1771853413154-secj",
+      "lastModified": 1771853453976,
+      "userId": "1771850710397"
+    },
+    {
+      "id": "1771850951625",
+      "name": "弯头3",
+      "spec": "",
+      "unit": "件",
+      "price": 0,
+      "categoryId": "cat-1771853422851-ko8d",
+      "lastModified": 1771853471331,
+      "userId": "1771850710397"
     }
   ],
   "customers": [

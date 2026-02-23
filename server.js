@@ -17,13 +17,14 @@ const DB_FILE = path.join(__dirname, 'db.json');
 
 const loadData = () => {
     if (!fs.existsSync(DB_FILE)) {
-        return { users: [], invoices: [], products: [], customers: [] };
+        return { users: [], invoices: [], products: [], categories: [], customers: [] };
     }
     const data = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
     return {
         users: data.users || [],
         invoices: data.invoices || [],
         products: data.products || [],
+        categories: data.categories || [],
         customers: data.customers || []
     };
 };
@@ -227,6 +228,45 @@ app.post('/api/products', authenticateToken, (req, res) => {
         db.products = db.products.concat(payload);
     }
     
+    saveData(db);
+    res.json({ success: true, deleted: Array.from(deleteIds) });
+});
+
+// Product Categories APIs with incremental sync support
+app.get('/api/categories', authenticateToken, (req, res) => {
+    const db = loadData();
+    const since = req.query.since ? parseInt(req.query.since) : 0;
+    let userCategories = db.categories.filter(category => category.userId === req.userId);
+
+    if (since > 0) {
+        userCategories = userCategories.filter(category => (category.lastModified || category.updatedAt || 0) >= since);
+    }
+
+    res.json(userCategories);
+});
+
+app.post('/api/categories', authenticateToken, (req, res) => {
+    const db = loadData();
+    const categories = Array.isArray(req.body) ? req.body : [req.body];
+    const now = Date.now();
+
+    const deleteIds = new Set(categories.filter(category => category && category.deleted).map(category => category.id));
+    if (deleteIds.size > 0) {
+        db.categories = db.categories.filter(category => !(category.userId === req.userId && deleteIds.has(category.id)));
+    }
+
+    const payload = categories.filter(category => category && !category.deleted);
+    payload.forEach(category => {
+        category.userId = req.userId;
+        category.lastModified = now;
+    });
+
+    if (payload.length > 0) {
+        const userCategoryIds = new Set(payload.map(category => category.id));
+        db.categories = db.categories.filter(category => category.userId !== req.userId || !userCategoryIds.has(category.id));
+        db.categories = db.categories.concat(payload);
+    }
+
     saveData(db);
     res.json({ success: true, deleted: Array.from(deleteIds) });
 });
