@@ -16,18 +16,34 @@ app.use(express.json());
 const DB_FILE = path.join(__dirname, 'db.json');
 
 const loadData = () => {
-    if (!fs.existsSync(DB_FILE)) {
-        return { users: [], invoices: [], products: [], categories: [], customers: [] };
+    try {
+        if (!fs.existsSync(DB_FILE)) {
+            const initialData = { users: [], invoices: [], products: [], categories: [], customers: [], keys: [] };
+            fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
+            return initialData;
+        }
+        const fileContent = fs.readFileSync(DB_FILE, 'utf8');
+        // 如果文件是空的，返回初始结构
+        if (!fileContent.trim()) {
+            return { users: [], invoices: [], products: [], categories: [], customers: [], keys: [] };
+        }
+        const data = JSON.parse(fileContent);
+        
+        // 关键修正：确保所有字段都存在，不要轻易返回空
+        return {
+            users: Array.isArray(data.users) ? data.users : [],
+            invoices: Array.isArray(data.invoices) ? data.invoices : [],
+            products: Array.isArray(data.products) ? data.products : [],
+            categories: Array.isArray(data.categories) ? data.categories : [],
+            customers: Array.isArray(data.customers) ? data.customers : [],
+            keys: Array.isArray(data.keys) ? data.keys : []
+        };
+    } catch (e) {
+        console.error("数据库读取出错，已备份旧文件并初始化新结构:", e);
+        // 出错时备份，防止彻底丢失
+        fs.renameSync(DB_FILE, `${DB_FILE}.error.${Date.now()}`);
+        return { users: [], invoices: [], products: [], categories: [], customers: [], keys: [] };
     }
-    const data = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
-    return {
-        users: data.users || [],
-        invoices: data.invoices || [],
-        products: data.products || [],
-        categories: data.categories || [],
-        customers: data.customers || [],
-        keys: data.keys || []
-    };
 };
 
 const saveData = (data) => {
