@@ -23,9 +23,10 @@
       "password": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
       "tokens": [
         "6ce16e8cd4fe0703d492c128c72def25dc049b644acfcfdbfa6959ee6c7a75c2",
-        "b41473aabb01a4b9f72d4adb7a3062b857f8b66d547aa73a31e2bb6c0679468b"
+        "b41473aabb01a4b9f72d4adb7a3062b857f8b66d547aa73a31e2bb6c0679468b",
+        "d49e1f630539d260afe551f85cba38bdc9f2f48cb480275bafd32f84421cde92"
       ],
-      "token": "b41473aabb01a4b9f72d4adb7a3062b857f8b66d547aa73a31e2bb6c0679468b",
+      "token": "d49e1f630539d260afe551f85cba38bdc9f2f48cb480275bafd32f84421cde92",
       "createdAt": 1770993697667
     },
     {
@@ -34,9 +35,10 @@
       "password": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
       "tokens": [
         "668b11f010b036ef88b294dceddd59cc155e105b994de19be351e4ff15fc711d",
-        "d0dee17de9e64cb16e2d76f5ef8b2791dd229fe679aefe117eaf8baf62743ed6"
+        "d0dee17de9e64cb16e2d76f5ef8b2791dd229fe679aefe117eaf8baf62743ed6",
+        "8ee7cbe682350d73ad0fd8fccbaaf7687f442011175dfd6b5ea6e611d28e6d70"
       ],
-      "token": "d0dee17de9e64cb16e2d76f5ef8b2791dd229fe679aefe117eaf8baf62743ed6",
+      "token": "8ee7cbe682350d73ad0fd8fccbaaf7687f442011175dfd6b5ea6e611d28e6d70",
       "createdAt": 1771850710397
     }
   ],
@@ -246,8 +248,67 @@
       "totalAmount": 0,
       "note": "",
       "createdAt": 1771850801559,
-      "lastModified": 1771850827901,
+      "lastModified": 1771929156270,
       "userId": "1771850710397"
+    },
+    {
+      "id": "1772169518416",
+      "no": "NO-20260227-762",
+      "title": "销售单",
+      "status": "saved",
+      "receiver": "1",
+      "handler": "1",
+      "warehouse": "主仓库",
+      "summary": "",
+      "date": "2026-02-27",
+      "items": [
+        {
+          "id": "1772169521690",
+          "name": "1",
+          "spec": "",
+          "unit": "个",
+          "price": 0,
+          "quantity": 0,
+          "total": 0,
+          "lineSummary": ""
+        }
+      ],
+      "totalAmount": 0,
+      "note": "",
+      "createdAt": 1772169518416,
+      "lastModified": 1772169554867,
+      "userId": "1771850710397"
+    },
+    {
+      "id": "1772200568141",
+      "no": "NO-20260227-482",
+      "title": "销售单",
+      "status": "saved",
+      "receiver": "c",
+      "handler": "",
+      "warehouse": "主仓库",
+      "summary": "",
+      "date": "2026-02-27",
+      "items": [
+        {
+          "id": "1772200572437",
+          "name": "pvc穿线管",
+          "spec": "",
+          "unit": "件",
+          "price": 3,
+          "quantity": 0,
+          "total": 0,
+          "lineSummary": "pvc穿线管",
+          "productId": "1771852571492"
+        }
+      ],
+      "totalAmount": 0,
+      "totalCost": 0,
+      "totalProfit": 0,
+      "note": "",
+      "createdAt": 1772200568141,
+      "lastModified": 1772200592359,
+      "userId": "1770993697662"
     }
   ],
   "products": [
@@ -306,15 +367,6 @@
       "userId": "1771850710397"
     },
     {
-      "id": "1771852571492",
-      "name": "pvc穿线管",
-      "spec": "",
-      "unit": "件",
-      "price": 0,
-      "lastModified": 1771852571508,
-      "userId": "1770993697662"
-    },
-    {
       "id": "cat-1771853413154-secj",
       "name": "pvc直接",
       "createdAt": 1771853413154,
@@ -349,8 +401,45 @@
       "categoryId": "cat-1771853422851-ko8d",
       "lastModified": 1771853471331,
       "userId": "1771850710397"
+    },
+    {
+      "id": "1771852571492",
+      "name": "pvc穿线管",
+      "spec": "",
+      "unit": "件",
+      "price": 0,
+      "lastModified": 1772200592369,
+      "userId": "1770993697662",
+      "customerPrices": [
+        {
+          "id": "cp-1772200510121-0u4z9i",
+          "customerName": "a",
+          "price": 1,
+          "lastPurchaseAt": 1772121600000,
+          "lastPurchaseDate": "2026-02-27",
+          "updatedAt": 1772200536422
+        },
+        {
+          "id": "cp-1772200514222-wutsik",
+          "customerName": "b",
+          "price": 2,
+          "lastPurchaseAt": 1772121600000,
+          "lastPurchaseDate": "2026-02-27",
+          "updatedAt": 1772200536422
+        },
+        {
+          "id": "cp-1772200592363-7owhbo",
+          "customerName": "c",
+          "price": 3,
+          "lastPurchaseAt": 1772121600000,
+          "lastPurchaseDate": "2026-02-27",
+          "updatedAt": 1772200592363
+        }
+      ],
+      "stockLogs": []
     }
   ],
+  "categories": [],
   "customers": [
     {
       "id": "1770977915796",
@@ -361,6 +450,78 @@
       "createdAt": 1770977915796,
       "lastModified": 1770977915823,
       "userId": "1770977207661"
+    }
+  ],
+  "keys": [
+    {
+      "key": "E8CAP",
+      "isUsed": false,
+      "usedBy": null,
+      "usedAt": null,
+      "createdAt": 1772258427408
+    },
+    {
+      "key": "89KCA",
+      "isUsed": false,
+      "usedBy": null,
+      "usedAt": null,
+      "createdAt": 1772258427408
+    },
+    {
+      "key": "FVJZD",
+      "isUsed": false,
+      "usedBy": null,
+      "usedAt": null,
+      "createdAt": 1772258427408
+    },
+    {
+      "key": "CNWH9",
+      "isUsed": false,
+      "usedBy": null,
+      "usedAt": null,
+      "createdAt": 1772258427408
+    },
+    {
+      "key": "KHDRZ",
+      "isUsed": false,
+      "usedBy": null,
+      "usedAt": null,
+      "createdAt": 1772258427408
+    },
+    {
+      "key": "NKBMM",
+      "isUsed": false,
+      "usedBy": null,
+      "usedAt": null,
+      "createdAt": 1772258453847
+    },
+    {
+      "key": "Z3PAY",
+      "isUsed": false,
+      "usedBy": null,
+      "usedAt": null,
+      "createdAt": 1772258453847
+    },
+    {
+      "key": "9BTNH",
+      "isUsed": false,
+      "usedBy": null,
+      "usedAt": null,
+      "createdAt": 1772258453847
+    },
+    {
+      "key": "AGMTZ",
+      "isUsed": false,
+      "usedBy": null,
+      "usedAt": null,
+      "createdAt": 1772258453847
+    },
+    {
+      "key": "P8NGK",
+      "isUsed": false,
+      "usedBy": null,
+      "usedAt": null,
+      "createdAt": 1772258453847
     }
   ]
 }

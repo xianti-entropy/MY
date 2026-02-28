@@ -25,7 +25,8 @@ const loadData = () => {
         invoices: data.invoices || [],
         products: data.products || [],
         categories: data.categories || [],
-        customers: data.customers || []
+        customers: data.customers || [],
+        keys: data.keys || []
     };
 };
 
@@ -55,38 +56,48 @@ const hashPassword = (password) => {
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    
+
     if (!token) {
         return res.status(401).json({ error: 'Token required' });
     }
-    
+
     const db = loadData();
     const user = db.users.find(u => getUserTokens(u).includes(token));
-    
+
     if (!user) {
         return res.status(403).json({ error: 'Invalid token' });
     }
-    
+
     req.userId = user.id;
     next();
 };
 
 // Auth APIs
 app.post('/api/auth/register', (req, res) => {
-    const { username, password } = req.body;
-    
-    if (!username || !password) {
-        return res.status(400).json({ error: 'Username and password required' });
+    const { username, password, key } = req.body;
+
+    if (!username || !password || !key) {
+        return res.status(400).json({ error: 'Username, password and key required' });
     }
-    
+
     const db = loadData();
+
+    // Key validation
+    const keyRecord = db.keys.find(k => k.key === key);
+    if (!keyRecord) {
+        return res.status(400).json({ error: '无效的注册密钥' });
+    }
+    if (keyRecord.isUsed) {
+        return res.status(400).json({ error: '该注册密钥已被使用' });
+    }
+
     if (db.users.find(u => u.username === username)) {
         return res.status(409).json({ error: 'User already exists' });
     }
-    
+
     const userId = Date.now().toString();
     const token = crypto.randomBytes(32).toString('hex');
-    
+
     db.users.push({
         id: userId,
         username: username,
@@ -95,11 +106,16 @@ app.post('/api/auth/register', (req, res) => {
         token: token,
         createdAt: Date.now()
     });
-    
+
+    // Mark key as used
+    keyRecord.isUsed = true;
+    keyRecord.usedBy = username;
+    keyRecord.usedAt = Date.now();
+
     saveData(db);
-    
-    res.json({ 
-        success: true, 
+
+    res.json({
+        success: true,
         token: token,
         user: { id: userId, username: username }
     });
@@ -107,26 +123,26 @@ app.post('/api/auth/register', (req, res) => {
 
 app.post('/api/auth/login', (req, res) => {
     const { username, password } = req.body;
-    
+
     if (!username || !password) {
         return res.status(400).json({ error: 'Username and password required' });
     }
-    
+
     const db = loadData();
     const user = db.users.find(u => u.username === username);
-    
+
     if (!user || user.password !== hashPassword(password)) {
         return res.status(401).json({ error: 'Invalid credentials' });
     }
-    
+
     const token = crypto.randomBytes(32).toString('hex');
     const tokens = getUserTokens(user);
     if (!tokens.includes(token)) tokens.push(token);
     setUserTokens(user, tokens);
     saveData(db);
-    
-    res.json({ 
-        success: true, 
+
+    res.json({
+        success: true,
         token: token,
         user: { id: user.id, username: user.username }
     });
@@ -134,19 +150,19 @@ app.post('/api/auth/login', (req, res) => {
 
 app.post('/api/auth/verify', (req, res) => {
     const token = req.body.token;
-    
+
     if (!token) {
         return res.status(400).json({ error: 'Token required' });
     }
-    
+
     const db = loadData();
     const user = db.users.find(u => getUserTokens(u).includes(token));
-    
+
     if (!user) {
         return res.status(401).json({ error: 'Invalid token' });
     }
-    
-    res.json({ 
+
+    res.json({
         valid: true,
         user: { id: user.id, username: user.username }
     });
@@ -157,11 +173,11 @@ app.get('/api/invoices', authenticateToken, (req, res) => {
     const db = loadData();
     const since = req.query.since ? parseInt(req.query.since) : 0;
     let userInvoices = db.invoices.filter(inv => inv.userId === req.userId);
-    
+
     if (since > 0) {
         userInvoices = userInvoices.filter(inv => (inv.lastModified || inv.updatedAt || 0) >= since);
     }
-    
+
     res.json(userInvoices);
 });
 
@@ -188,7 +204,7 @@ app.post('/api/invoices', authenticateToken, (req, res) => {
         db.invoices = db.invoices.filter(inv => inv.userId !== req.userId || !userInvoiceIds.has(inv.id));
         db.invoices = db.invoices.concat(payload);
     }
-    
+
     saveData(db);
     res.json({ success: true, deleted: Array.from(deleteIds) });
 });
@@ -198,11 +214,11 @@ app.get('/api/products', authenticateToken, (req, res) => {
     const db = loadData();
     const since = req.query.since ? parseInt(req.query.since) : 0;
     let userProducts = db.products.filter(prod => prod.userId === req.userId);
-    
+
     if (since > 0) {
         userProducts = userProducts.filter(prod => (prod.lastModified || prod.updatedAt || 0) >= since);
     }
-    
+
     res.json(userProducts);
 });
 
@@ -227,7 +243,7 @@ app.post('/api/products', authenticateToken, (req, res) => {
         db.products = db.products.filter(prod => prod.userId !== req.userId || !userProductIds.has(prod.id));
         db.products = db.products.concat(payload);
     }
-    
+
     saveData(db);
     res.json({ success: true, deleted: Array.from(deleteIds) });
 });
@@ -276,11 +292,11 @@ app.get('/api/customers', authenticateToken, (req, res) => {
     const db = loadData();
     const since = req.query.since ? parseInt(req.query.since) : 0;
     let userCustomers = db.customers.filter(cust => cust.userId === req.userId);
-    
+
     if (since > 0) {
         userCustomers = userCustomers.filter(cust => (cust.lastModified || cust.updatedAt || 0) >= since);
     }
-    
+
     res.json(userCustomers);
 });
 
@@ -305,7 +321,7 @@ app.post('/api/customers', authenticateToken, (req, res) => {
         db.customers = db.customers.filter(cust => cust.userId !== req.userId || !userCustomerIds.has(cust.id));
         db.customers = db.customers.concat(payload);
     }
-    
+
     saveData(db);
     res.json({ success: true, deleted: Array.from(deleteIds) });
 });
